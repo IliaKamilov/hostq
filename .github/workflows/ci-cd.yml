@@ -41,7 +41,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ github.run_id }}
+          name: dist-${{matrix.node-version}}-${{ github.run_id }}
           path: dist/
 
   deploy:
