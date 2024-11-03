@@ -43,6 +43,28 @@ jobs:
         with:
           name: dist-${{ github.run_id }}
           path: dist/
+
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete existing artifacts
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            for (const artifact of artifacts.data.artifacts) {
+              if (artifact.name.startsWith('dist-')) { 
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                });
+              }
+            }
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
