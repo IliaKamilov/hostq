@@ -49,11 +49,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref =='refs/heads/main'
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist-${{ github.run_id }}
+          name: dist-${{ matrix.node-version }}-${{ github.run_id }}
           path: dist/
 
       - name: Deploy to GitHub Pages
